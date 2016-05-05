@@ -1,13 +1,14 @@
 '''
-Created on May 4, 2016
+Created on May 5, 2016
 
 @author: Zach
 '''
-import requests, time, datetime
+import requests, time, datetime, os
 
 default_output_csv = "C:/Users/Zach/Desktop/courses.csv"
 default_root_url = "https://ntst.umd.edu/soc"
 semesters = {"Spring": "01", "Summer": "05", "Fall": "08", "Winter": "12"}
+#semesters = {"Spring": "01", "Fall": "08"}
 
 def get_semester(month):
     """Returns semester of given month number."""
@@ -98,7 +99,7 @@ def parse_course_text(text):
 
 def parse_courses_to_file(semester=current_semester, year=current_year, root_url=default_root_url, output_file=default_output_csv):
     """Write course data to file"""
-    output_file = output_file.partition(".csv")[0] + "_" + semester + "_" + str(year) + ".csv"
+    #output_file = output_file.partition(".csv")[0] + "_" + semester + "_" + str(year) + ".csv"
     output_file = open(output_file, "w")
     print("Writing course data to " + output_file.name)
     print(parse_courses(semester, year, root_url), file=output_file)
@@ -141,3 +142,64 @@ def parse_courses(semester=current_semester, year=current_year, root_url=default
         
     print("Download complete, took " + str(int(time.time() - then)) + " seconds.")
     return courses_csv
+
+class Course:
+    """Course with major, course_id, course_title, credits, grading_methods methods, GenEd gen_ed_codes, prerequisites, and description."""
+    def __init__(self, course_id, course_title, major, course_min_credits, grading_methods, gen_ed_codes, prerequisites, restrictions, equivalences, description):
+        self.major = major
+        self.course_id = course_id
+        self.course_title = course_title
+        self.min_credits = course_min_credits
+        self.grading_methods = grading_methods
+        self.gen_ed_codes = gen_ed_codes.split(";")
+        self.prerequisites = prerequisites
+        self.restrictions = restrictions
+        self.equivalences = equivalences.split(";")
+        self.description = description
+    
+    def __str__(self):
+        return self.course_id + " " + self.course_title + "\n" + "Major: " + self.major + "\n" + "Credits: " + self.min_credits + "\n" + "Grading methods: " + str(self.grading_methods) + "\n" + "GenEd: " + str(self.gen_ed_codes) + "\n" + "Prerequisites: " + str(self.prerequisites) + "\n" + "Restrictions: " + str(self.restrictions) + "\n" + "Equivalences: " + str(self.equivalences) + "\n" + "Description: " + self.description
+    
+def get_courses(semester, year, data_file):
+    """Returns list of Course objects parsed from main page"""
+    if not os.path.isfile(data_file):
+        print("Data file " + data_file + " does not exist.")
+        ensure_dir(data_file.rsplit("/", 1)[0])
+        parse_courses_to_file(semester=semester, year=year, output_file=data_file)
+    else:
+        print("Data file " + data_file + " already exists.")
+        
+    #input_csv = parse_courses(semester=semester, year=year).split("\n")
+    input_csv = open(data_file, "r").readlines()
+    #columns = input_csv[0].strip("\n").split(",")
+    del input_csv[0]
+    del input_csv[len(input_csv) - 1]
+    
+    courses = []
+    for line in input_csv:
+        values = line.strip("\n").strip('"').split('","')
+        course_id, course_title, major, course_min_credits, grading_methods, course_subcategory, prerequisites, restrictions, equivalences, description = values
+        course = Course(course_id, course_title, major, course_min_credits, grading_methods, course_subcategory, prerequisites, restrictions, equivalences, description)
+        courses.append(course)
+    
+    return courses
+
+years = range(2015, datetime.datetime.now().year + 1)
+root_directory = "C:/Users/Zach/Desktop/courses"
+
+def ensure_dir(path):
+    if not os.path.isdir(path):
+        os.makedirs(path)
+
+for year in years:
+    for semester in semesters:
+        print("Writing HTML for " + semester + " " + str(year) + " semester...")
+        for course in get_courses(semester, year, root_directory + "/" + str(year) + "/courses_" + semester + "_" + str(year) + ".csv"):                      
+            path = root_directory + "/" + str(year) + "/" + semester + "/" + course.course_id
+            ensure_dir(path)
+            
+            index_html = open(path + "/index.html", "w")
+            
+            course_html = "<!DOCTYPE=html>" + "\n" + "<html>" + "\n" + "<head>" + "\n" + "<title>" + course.course_id + "</title>" + "\n" + "</head>" + "\n" + "<body>" + "\n" + "<pre>" + "\n" + str(course) + "\n" + "</pre>" + "\n" + "</body>" + "\n" + "</html>"
+            print(course_html, file=index_html)
+        print()
