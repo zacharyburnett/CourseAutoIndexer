@@ -184,8 +184,8 @@ def get_courses(semester, year, data_file):
 
 def write_index_html(title, children, body_preformatted, path):
     ensure_dir(path)
-
     index_html = open(path + "/index.html", "w")
+    parent = path.rsplit("/", 1)[0].partition("www")[2]
     
     print("<!DOCTYPE=html><html>", file=index_html)
     print("<title>", file=index_html)
@@ -194,6 +194,7 @@ def write_index_html(title, children, body_preformatted, path):
     print("<h1", file=index_html)
     print(title, file=index_html)
     print("</h1>", file=index_html)
+    print('<a href="' + parent + '">' + parent + "</a>")
     print("<body><pre>", file=index_html)
     print(body_preformatted, file=index_html)
     print("</pre></body>", file=index_html)
