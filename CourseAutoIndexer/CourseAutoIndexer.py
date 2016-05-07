@@ -205,16 +205,17 @@ def write_index_html(course_id, course_title, body_preformatted, path):
     print("</body>", file=index_html)
     print("</html>", file=index_html)
 
+years = range(2015, datetime.datetime.now().year + 1)
+root_directory = "C:/WAMP/www/courses"
+
 def ensure_dir(path):
     if not os.path.isdir(path):
         os.makedirs(path)
 
-directory = root_directory
 for year in years:
-    directory += "/" + str(year)
+    year_directory = root_directory + "/" + str(year)
     for semester in semesters:
-        directory += "/" + semester
+        semester_directory = year_directory + "/" + semester
         print("Writing HTML for " + semester + " " + str(year) + " semester...")
-        for course in get_courses(semester, year, directory + "/courses_" + semester + "_" + str(year) + ".csv"):                      
-            folder = directory + "/" + course.course_id
-            write_index_html(course.course_id, course.course_title, str(course), folder)
+        for course in get_courses(semester, year, semester_directory + "/courses_" + semester + "_" + str(year) + ".csv"):                      
+            write_index_html(course.course_id + " " + course.course_title, str(course), semester_directory + "/" + course.course_id)
