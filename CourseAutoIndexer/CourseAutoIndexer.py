@@ -8,6 +8,8 @@ from test.test_dis import outer
 
 default_root_url = "https://ntst.umd.edu/soc"
 semesters = {"Spring": "01", "Summer": "05", "Fall": "08", "Winter": "12"}
+years = range(2014, datetime.datetime.now().year + 1)
+root_directory = "C:/Users/Zach/Desktop/courses"
 
 def get_semester(month):
     """Returns semester of given month number."""
@@ -96,7 +98,7 @@ def parse_course_text(text):
     
     return (prerequisites, restrictions, equivalences, description)
 
-def parse_courses_to_file(semester=current_semester, year=current_year, root_url=default_root_url, output_file):
+def parse_courses_to_file(output_file, semester=current_semester, year=current_year, root_url=default_root_url):
     """Write course data to file"""
     output_file = open(output_file, "w")
     print("Writing course data to " + output_file.name)
@@ -163,7 +165,7 @@ def get_courses(semester, year, data_file):
     if not os.path.isfile(data_file):
         print("Data file " + data_file + " does not exist.")
         ensure_dir(data_file.rsplit("/", 1)[0])
-        parse_courses_to_file(semester=semester, year=year, output_file=data_file)
+        parse_courses_to_file(data_file, semester=semester, year=year)
     else:
         print("Data file " + data_file + " already exists.")
         
@@ -182,27 +184,26 @@ def get_courses(semester, year, data_file):
     
     return courses
 
-def write_index_html(title, children, body_preformatted, path):
+def write_index_html(course_id, course_title, body_preformatted, path):
     ensure_dir(path)
     index_html = open(path + "/index.html", "w")
     parent = path.rsplit("/", 1)[0].partition("www")[2]
     
     print("<!DOCTYPE=html><html>", file=index_html)
     print("<title>", file=index_html)
-    print(title, file=index_html)
+    print(course_id + " " + course_title, file=index_html)
     print("</title>", file=index_html)
-    print("<h1", file=index_html)
-    print(title, file=index_html)
+    print("<h1>", file=index_html)
+    print(course_id + " " + course_title, file=index_html)
     print("</h1>", file=index_html)
-    print('<a href="' + parent + '">' + parent + "</a>")
+    print('<a href="' + parent + '">' + parent + "</a>", file=index_html)
     print("<body><pre>", file=index_html)
     print(body_preformatted, file=index_html)
-    print("</pre></body>", file=index_html)
+    print("</pre>", file=index_html)
+    print("<br>OurUMD<br>")
+    print('<iframe src="http://www.ourumd.com/class/' + course_id + '" height="50%" width="100%"></iframe>')
+    print("</body>", file=index_html)
     print("</html>", file=index_html)
-    
-
-years = range(2015, datetime.datetime.now().year + 1)
-root_directory = sys.argv[0]
 
 def ensure_dir(path):
     if not os.path.isdir(path):
@@ -215,5 +216,5 @@ for year in years:
         directory += "/" + semester
         print("Writing HTML for " + semester + " " + str(year) + " semester...")
         for course in get_courses(semester, year, directory + "/courses_" + semester + "_" + str(year) + ".csv"):                      
-            path = directory + "/" + course.course_id
-            write_index_html(course.course_id + " " + course.course_title, str(course), path)
+            folder = directory + "/" + course.course_id
+            write_index_html(course.course_id, course.course_title, str(course), folder)
