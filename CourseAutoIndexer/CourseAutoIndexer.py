@@ -218,4 +218,4 @@ for year in years:
         semester_directory = year_directory + "/" + semester
         print("Writing HTML for " + semester + " " + str(year) + " semester...")
         for course in get_courses(semester, year, semester_directory + "/courses_" + semester + "_" + str(year) + ".csv"):                      
-            write_index_html(course.course_id + " " + course.course_title, str(course), semester_directory + "/" + course.course_id)
+            write_index_html(course.course_id, course.course_title, str(course), semester_directory + "/" + course.course_id)
