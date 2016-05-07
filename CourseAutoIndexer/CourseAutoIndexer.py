@@ -199,7 +199,7 @@ def write_index_html(course_id, course_title, body_preformatted, path):
     print(body_preformatted, file=index_html)
     print("</pre>", file=index_html)
     print("</p>", file=index_html)
-    print("<br>OurUMD<br>")
+    print("<br>" + course_id + " OurUMD page<br>")
     print('<iframe src="http://www.ourumd.com/class/' + course_id + '" height="50%" width="100%"></iframe>')
     print("</body>", file=index_html)
     print("</html>", file=index_html)
