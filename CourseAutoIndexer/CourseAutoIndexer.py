@@ -4,7 +4,6 @@ Created on May 5, 2016
 @author: Zach
 '''
 import requests, time, datetime, os, sys
-from test.test_dis import outer
 
 default_root_url = "https://ntst.umd.edu/soc"
 semesters = {"Spring": "01", "Summer": "05", "Fall": "08", "Winter": "12"}
@@ -188,18 +187,18 @@ def write_index_html(course_id, course_title, body_preformatted, path):
     ensure_dir(path)
     index_html = open(path + "/index.html", "w")
     parent = path.rsplit("/", 1)[0].partition("www")[2]
+    header = course_id + ": " + course_title
     
     print("<!DOCTYPE=html><html>", file=index_html)
-    print("<title>", file=index_html)
-    print(course_id + " " + course_title, file=index_html)
-    print("</title>", file=index_html)
-    print("<h1>", file=index_html)
-    print(course_id + " " + course_title, file=index_html)
-    print("</h1>", file=index_html)
-    print('<a href="' + parent + '">' + parent + "</a>", file=index_html)
-    print("<body><pre>", file=index_html)
+    print("<title>" + header + "</title>", file=index_html)
+    print("<h1>" + header + "</h1>", file=index_html)
+    print('<p><a href="' + parent + '">' + "Back to " + parent.rsplit("/", 1)[2] + "</a></p>", file=index_html)
+    print("<body>", file=index_html)
+    print("<p>", file=index_html)
+    print("<pre>", file=index_html)
     print(body_preformatted, file=index_html)
     print("</pre>", file=index_html)
+    print("</p>", file=index_html)
     print("<br>OurUMD<br>")
     print('<iframe src="http://www.ourumd.com/class/' + course_id + '" height="50%" width="100%"></iframe>')
     print("</body>", file=index_html)
