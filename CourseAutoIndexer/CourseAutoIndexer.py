@@ -205,7 +205,7 @@ def write_index_html(course_id, course_title, body_preformatted, path):
     print("</body>", file=index_html)
     print("</html>", file=index_html)
 
-years = range(2015, datetime.datetime.now().year + 1)
+years = range(2014, datetime.datetime.now().year + 1)
 root_directory = "C:/WAMP/www/courses"
 
 def ensure_dir(path):
