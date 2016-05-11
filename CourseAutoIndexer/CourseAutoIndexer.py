@@ -221,11 +221,12 @@ for course in sorted(courses):
     
     print("<body>\n<p>\n<pre>\n" + str(courses[course]) + "\n</p>", file=course_html)
 
-    print("<p>", file=course_html)
+    print("<p>\nSemesters this course was offered:", file=course_html)
     for year in sorted(courses[course].years):
-        print(year, file=course_html)
+        print(year + ": ", file=course_html, end="")
         for semester in courses[course].years[year]:
-            print(semester, file=course_html)
+            print(semester + " ", file=course_html, end="")
+        print("", file=course_html)
     print("</pre></p>", file=course_html, end="\n\n")
       
     print("<br>" + major + course_id + ' <a href="http://www.ourumd.com/class/' + major + course_id + '">OurUMD page</a><br>', file=course_html)
