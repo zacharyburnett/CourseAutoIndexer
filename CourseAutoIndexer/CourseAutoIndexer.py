@@ -224,15 +224,15 @@ for course in sorted(courses):
     
     print("<body>\n<p>\n<pre>\n" + str(courses[course]) + "\n</p>", file=course_html)
 
-    print("<p>\nSemesters this course was offered:", file=course_html)
+    print("<p>\nSemesters offered:", file=course_html)
     for year in sorted(courses[course].years):
-        print(str(year) + ": ", file=course_html, end="")
+        print(str(year) + ":", file=course_html, end="")
         for semester in courses[course].years[year]:
-            print(semester + " ", file=course_html, end="")
+            print(semester, file=course_html, end="")
         print("", file=course_html)
     print("</pre></p>", file=course_html, end="\n\n")
       
-    print("<br>" + major + course_id + ' <a href="http://www.ourumd.com/class/' + major + course_id + '">OurUMD page</a><br>', file=course_html)
+    print('<br><a href="http://www.ourumd.com/class/' + major + course_id + '">' + major + course_id + ' on OurUMD</a><br>', file=course_html)
     print('<iframe src="http://www.ourumd.com/class/' + major + course_id + '" height="50%" width="100%"></iframe>', file=course_html)
     
     print("</body>\n</html>", file=course_html)
@@ -241,3 +241,5 @@ for course in sorted(courses):
         
 print("</p>\n</body>\n</html>", file=courses_html)
 courses_html.close()
+
+print("Finished generating HTML files.")
