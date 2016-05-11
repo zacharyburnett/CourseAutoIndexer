@@ -191,6 +191,9 @@ for year in years:
 
             courses[name].years[year].append(semester)
 
+            
+print("Writing HTML files...")
+
 courses_html = open(root_dir + "/index.html", "w")
 print("<!DOCTYPE=html>\n<html>", file=courses_html)
 print("<title>Courses</title>\n<body>", file=courses_html)
@@ -223,7 +226,7 @@ for course in sorted(courses):
 
     print("<p>\nSemesters this course was offered:", file=course_html)
     for year in sorted(courses[course].years):
-        print(year + ": ", file=course_html, end="")
+        print(str(year) + ": ", file=course_html, end="")
         for semester in courses[course].years[year]:
             print(semester + " ", file=course_html, end="")
         print("", file=course_html)
@@ -235,8 +238,6 @@ for course in sorted(courses):
     print("</body>\n</html>", file=course_html)
     
     course_html.close()
-    
-    print(major + course_id)
-    
+        
 print("</p>\n</body>\n</html>", file=courses_html)
 courses_html.close()
