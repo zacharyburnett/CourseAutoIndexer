@@ -8,7 +8,7 @@ import requests, datetime, os
 default_root_url = "https://ntst.umd.edu/soc"
 semesters = {"Spring": "01", "Summer": "05", "Fall": "08", "Winter": "12"}
 years = range(2014, datetime.datetime.now().year + 1)
-root_dir = "C:/Users/Zach/Desktop/courses"
+root_dir = "C:/WAMP/courses"
 
 def get_semester(month):
     """Returns semester of given month number."""
