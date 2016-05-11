@@ -6,15 +6,15 @@ Created on May 5, 2016
 import requests, datetime, os
 
 default_root_url = "https://ntst.umd.edu/soc"
-semesters = {"Spring": "01", "Summer": "05", "Fall": "08", "Winter": "12"}
+semesters = {"Spring": 1, "Summer": 5, "Fall": 8, "Winter": 12}
 years = range(2014, datetime.datetime.now().year + 1)
 root_dir = "C:/WAMP/www/courses"
 courses = {}
 
 def get_semester(month):
     """Returns semester of given month number."""
-    for semester in sorted(semesters):
-        if month >= int(semesters[semester]):
+    for semester in sorted(semesters, key=lambda semester: semesters[semester]):
+        if month >= semesters[semester]:
             return semester
         
 current_year = datetime.datetime.now().year
@@ -118,7 +118,7 @@ def parse_courses(semester=current_semester, year=current_year, root_url=default
     semester_csv = ",".join(("Course ID", "Title", "Major", "Credits", "Grading Methods", "GenEd", "Prerequisites", "Restrictions", "Equivalences", "Description")) + "\n"
     
     for major in majors:
-        major_url = root_url + "/" + str(year) + semesters[semester] + "/" + major
+        major_url = root_url + "/" + str(year) + str(semesters[semester]).zfill(2) + "/" + major
         # get part of HTML relevant to course info and split into courses
         major_html = requests.get(major_url).text.partition('<div class="courses-container">')[2].partition('<script type="text/javascript">')[0].split('<div id="' + major)
         del major_html[0]
@@ -164,8 +164,8 @@ def ensure_dir(path):
         os.makedirs(path)
 
 for year in years:
-    for semester in sorted(semesters):
-        semester_csv = root_dir + "/semesters/" + str(year) + "_" + str(semesters[semester]) + "_" + semester + ".csv"
+    for semester in sorted(semesters, key=lambda semester: semesters[semester]):
+        semester_csv = root_dir + "/semesters/" + str(year) + "_" + str(semesters[semester]).zfill(2) + "_" + semester + ".csv"
         if not os.path.isfile(semester_csv):
             ensure_dir(semester_csv.rsplit("/", 1)[0])
             parse_courses_to_file(semester_csv, semester=semester, year=year)
