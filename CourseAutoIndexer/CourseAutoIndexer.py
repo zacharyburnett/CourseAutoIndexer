@@ -8,7 +8,8 @@ import requests, datetime, os
 default_root_url = "https://ntst.umd.edu/soc"
 semesters = {"Spring": "01", "Summer": "05", "Fall": "08", "Winter": "12"}
 years = range(2014, datetime.datetime.now().year + 1)
-root_dir = "C:/WAMP/courses"
+root_dir = "C:/WAMP/www/courses"
+courses = {}
 
 def get_semester(month):
     """Returns semester of given month number."""
@@ -157,11 +158,7 @@ class Course:
     
     def __str__(self):
         return self.major + self.course_id + " " + self.course_title + "\n" + "Major: " + self.major + "\n" + "Credits: " + self.min_credits + "\n" + "Grading methods: " + str(self.grading_methods) + "\n" + "GenEd: " + str(self.gen_ed_codes) + "\n" + "Prerequisites: " + str(self.prerequisites) + "\n" + "Restrictions: " + str(self.restrictions) + "\n" + "Equivalences: " + str(self.equivalences) + "\n" + "Description: " + self.description
-
-years = range(2014, datetime.datetime.now().year + 1)
-root_dir = "C:/Users/Zach/Desktop/courses"
-courses = {}
-
+    
 def ensure_dir(path):
     if not os.path.isdir(path):
         os.makedirs(path)
