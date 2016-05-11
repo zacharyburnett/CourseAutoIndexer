@@ -208,9 +208,9 @@ for course in sorted(courses):
     path = root_dir +  "/" + major + "/" + course_id
     ensure_dir(path)
     course_html = open(path + "/index.html", "w")
-    header = course_id + ": " + course_title
+    header = major + course_id + ": " + course_title
     
-    print('<a href="' + path + '">' + major + course_id + ': ' + course_title + '</a><br>', file=courses_html, end="\n")
+    print('<a href="' + major + "/" + course_id + '">' + major + course_id + ': ' + course_title + '</a><br>', file=courses_html, end="\n")
     
     print("<!DOCTYPE=html>\n<html>", file=course_html)
     print("<title>" + header + "</title>", file=course_html)
@@ -228,7 +228,7 @@ for course in sorted(courses):
             print(semester, file=course_html)
     print("</pre></p>", file=course_html, end="\n\n")
       
-    print("<br>" + course_id + " OurUMD page<br>", file=course_html)
+    print("<br>" + major + course_id + " OurUMD page<br>", file=course_html)
     print('<iframe src="http://www.ourumd.com/class/' + major + course_id + '" height="50%" width="100%"></iframe>', file=course_html)
     
     print("</body>\n</html>", file=course_html)
