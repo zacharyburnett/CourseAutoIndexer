@@ -228,12 +228,14 @@ for course in sorted(courses):
             print(semester, file=course_html)
     print("</pre></p>", file=course_html, end="\n\n")
       
-    print("<br>" + major + course_id + " OurUMD page<br>", file=course_html)
+    print("<br>" + major + course_id + ' <a href="http://www.ourumd.com/class/' + major + course_id + '">OurUMD page</a><br>', file=course_html)
     print('<iframe src="http://www.ourumd.com/class/' + major + course_id + '" height="50%" width="100%"></iframe>', file=course_html)
     
     print("</body>\n</html>", file=course_html)
     
     course_html.close()
+    
+    print(major + course_id)
     
 print("</p>\n</body>\n</html>", file=courses_html)
 courses_html.close()
